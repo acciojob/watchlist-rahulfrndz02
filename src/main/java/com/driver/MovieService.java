@@ -13,4 +13,18 @@ public class MovieService {
         String result = movieRepository.addMovieToDb(movie);
         return result;
     }
+
+    String addDirector(Director director){
+        String result = movieRepository.addDirectorToDb(director);
+        return result;
+    }
+
+    Pair addMovieDirectorPair() {
+        Pair result = movieRepository.addMovieDirectorPair();
+        return result;
+    }
+    String getMovieByMovieName(Movie movie){
+        Movie movieName = movieRepository.getMovieByMovieName(movie);
+        return movieName;
+    }
 }
