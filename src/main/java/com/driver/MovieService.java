@@ -19,12 +19,31 @@ public class MovieService {
         return result;
     }
 
-    Pair addMovieDirectorPair() {
-        Pair result = movieRepository.addMovieDirectorPair();
+    Pair addMovieDirectorPair(Pair pair) {
+        Pair result = movieRepository.addMovieDirectorPairFromDb();
         return result;
     }
-    String getMovieByMovieName(Movie movie){
-        Movie movieName = movieRepository.getMovieByMovieName(movie);
-        return movieName;
+    Movie getMovieByMovieName(String searchM){
+        Movie result = movieRepository.getMovieByMovieNameFromDb(searchM);
+        return result;
+    }
+    Director getDirectorByDirectorName(String d){
+        Director result = movieRepository.getDirectorByDirectorNameFromDb(d);
+        return result;
+    }
+    Movie getMovieByDirectorName(String dName){
+        Movie result = movieRepository.getMovieByDirectorNameFromDb(dName);
+        return result;
+    }
+    Movie findAllMovies(){
+        Movie result = movieRepository.findAllMoviesFromDb();
+        return result;
+    }
+    Pair deleteDirectorByName(String searchDirector){
+        Pair pair = movieRepository.deleteDirectorByNameFromDb(searchDirector);
+        return pair;
+    }
+    Director deleteAllDirectors(){
+        return movieRepository.deleteAllDirectorFromDb();
     }
 }

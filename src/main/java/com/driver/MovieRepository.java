@@ -20,9 +20,13 @@ class Pair{
 
 @Repository
 public class MovieRepository {
-    Map<String, Movie> movieDb = new HashMap<>(); //database for movie
+    static Map<String, Movie> movieDb = new HashMap<>(); //database for movie
     Map<String, Director> directorDb = new HashMap<>(); //database for director
     Map<String, Pair> pairDb = new HashMap<>(); //database for pair
+
+    static{
+        movieDb.put(null, (new Movie("Dilwale", 124,7.9)));
+    }
 
     //add movie to db
     String addMovieToDb(Movie movie){
@@ -40,7 +44,7 @@ public class MovieRepository {
     }
 
     //Pair an existing movie and director
-    Pair addMovieDirectorPair(){
+    Pair addMovieDirectorPairFromDb(){
         for(Pair p : pairDb.values()){
             return p;
         }
@@ -48,7 +52,7 @@ public class MovieRepository {
     }
 
     //Get Movie by movie name
-    Movie getMovieByMovieName(Movie movieName){
+    Movie getMovieByMovieNameFromDb(String movieName){
         for(Movie m : movieDb.values()){
             if(m.equals(movieName)){
                 return m;
@@ -58,7 +62,7 @@ public class MovieRepository {
     }
 
     //Get Director by director name
-    Director getDirectorByDirectorName(Director directorName){
+    Director getDirectorByDirectorNameFromDb(String directorName){
         for(Director d : directorDb.values()){
             if(d.equals(directorName)){
                 return d;
@@ -68,7 +72,7 @@ public class MovieRepository {
     }
 
     //Get List of movies name for a given director name
-    Movie getMovieByMovieName(Director directorName){
+    Movie getMovieByDirectorNameFromDb(String directorName){
         for(Movie m : movieDb.values()){
             if(m.equals(directorName)){
                 return m;
@@ -78,7 +82,7 @@ public class MovieRepository {
     }
 
     //Get List of all movies added
-    Movie findAllMovies(){
+    Movie findAllMoviesFromDb(){
         for(Movie m : movieDb.values()){
             return m;
         }
@@ -86,6 +90,15 @@ public class MovieRepository {
     }
 
     //Delete a director and its movies from the records
+    Pair deleteDirectorByNameFromDb(String searchDirector){
+            return pairDb.remove(searchDirector);
+    }
 
     //Delete all directors and all movies by them from the records
+    Director deleteAllDirectorFromDb(){
+        for(Director d : directorDb.values()){
+            directorDb.remove(d);
+        }
+        return null;
+    }
 }

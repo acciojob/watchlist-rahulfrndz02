@@ -30,33 +30,55 @@ public class MovieController {
 
     //Pair an existing movie and director
     @PutMapping("/add-movie-director-pair")
-    public ResponseEntity<Pair> addMovieDirectorPair(@RequestBody() Movie movie, @RequestBody Director director){
-        return new ResponseEntity<>(movieService.addMovieDirectorPair(movie, director),HttpStatus.OK);
+    public ResponseEntity<Pair> addMovieDirectorPair(@RequestBody() Pair pair){
+        return new ResponseEntity<>(movieService.addMovieDirectorPair(pair), HttpStatus.OK);
     }
 
     //Get Movie by movie name
     @GetMapping("/get-movie-by-movie-name/{name}")
-    public ResponseEntity<Movie> getMovie(@RequestParam("name") Movie movie){
-        return null;
+    public ResponseEntity<Movie> getMovie(@RequestParam("name") String searchMovie){
+        //Movie movie = null;
+         Movie movie = movieService.getMovieByMovieName(searchMovie);
+        return new ResponseEntity<>(movie, HttpStatus.FOUND);
     }
 
     //Get Director by director name
+    @GetMapping("/get-director-by-director-name/{name}")
+    public ResponseEntity<Director> getDirectorByDirectorName(@RequestParam("name") String searchDirector){
+       // Director director = null;
+        Director director = movieService.getDirectorByDirectorName(searchDirector);
+        return new ResponseEntity<>(director, HttpStatus.FOUND);
+    }
 
     //Get List of movies name for a given director name
+    @GetMapping("/get-movie-by-director-name/{name}")
+    public ResponseEntity<Movie> getMovieByDirectorName(@RequestParam("name") String searchDirector){
+        Movie movie = null;
+        movie = movieService.getMovieByDirectorName(searchDirector);
+        return new ResponseEntity<>(movie, HttpStatus.FOUND);
+    }
 
     //Get List of all movies added
     @GetMapping("/get-all-movies")
     public ResponseEntity<Movie> findAllMovies(){
         Movie allMovie = movieService.findAllMovies();
         if(allMovie==null){
-            return new ResponseEntity<>(resultStudent,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         else
-            return new ResponseEntity<>(resultStudent,HttpStatus.OK);
+            return new ResponseEntity<>(allMovie,HttpStatus.OK);
     }
 
     //Delete a director and its movies from the records
+    public ResponseEntity<String> deleteDirectorByName(@RequestParam("name") String searchDirector){
+           this.movieService.deleteDirectorByName(searchDirector);
+           return new ResponseEntity<>("The director has been deleted", HttpStatus.OK);
+
+    }
 
     //Delete all directors and all movies by them from the records
-
+    public ResponseEntity<Director> deleteAllDirectors(){
+        Director d = movieService.deleteAllDirectors();
+        return new ResponseEntity<>(d, HttpStatus.OK);
+    }
 }
