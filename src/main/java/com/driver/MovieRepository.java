@@ -1,104 +1,133 @@
 package com.driver;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.view.xml.MarshallingView;
 
 import javax.management.modelmbean.ModelMBeanConstructorInfo;
 import java.security.DigestException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 //Pair class
-class Pair{
-    String movie;
-    String director;
-    public Pair(String movie, String director){
-        this.movie = movie;
-        this.director = director;
-    }
-}
-
+//class Pair{
+//    String movie;
+//    String director;
+//    public Pair(String movie, String director){
+//        this.movie = movie;
+//        this.director = director;
+//    }
+//}
+@Component
 @Repository
 public class MovieRepository {
-    static Map<String, Movie> movieDb = new HashMap<>(); //database for movie
-    Map<String, Director> directorDb = new HashMap<>(); //database for director
-    Map<String, Pair> pairDb = new HashMap<>(); //database for pair
+    private Map<String, Movie> movieDb = new HashMap<>(); //database for movie
+    private Map<String, Director> directorDb = new HashMap<>(); //database for director
+    private Map<String, List<String>> pairDb = new HashMap<>(); //database for pair
 
-    static{
-        movieDb.put(null, (new Movie("Dilwale", 124,7.9)));
-    }
+//    static{
+//        movieDb.put(null, (new Movie("Mission Impossible", 124,9.9)));
+//    }
 
     //add movie to db
-    String addMovieToDb(Movie movie){
-        String mName = movie.getName();
-        movieDb.put(mName, movie);
-        return "Successfully added";
+    public void saveMovie(Movie movie){
+        movieDb.put(movie.getName(),movie);
     }
-
 
     //add director to db
-    String addDirectorToDb(Director director){
-        String dName = director.getName();
-        directorDb.put(dName, director);
-        return "Successfully added";
+    public void saveDirector(Director director){
+        directorDb.put(director.getName(), director);
     }
 
-    //Pair an existing movie and director
-    Pair addMovieDirectorPairFromDb(){
-        for(Pair p : pairDb.values()){
-            return p;
-        }
-        return null;
-    }
+    //save movie director pair
+    public void saveMovieDirectorPair(String movie, String Director){
 
-    //Get Movie by movie name
-    Movie getMovieByMovieNameFromDb(String movieName){
-        for(Movie m : movieDb.values()){
-            if(m.equals(movieName)){
-                return m;
+        if(directorDb.containsKey(Director) && movieDb.containsKey(movie)){
+            List<String> currentMovies=new ArrayList<>();
+            if(pairDb.containsKey(Director)){
+                currentMovies=pairDb.get(Director);
+                currentMovies.add(movie);
+                pairDb.put(Director,currentMovies);
             }
         }
-        return null;
     }
 
-    //Get Director by director name
-    Director getDirectorByDirectorNameFromDb(String directorName){
-        for(Director d : directorDb.values()){
-            if(d.equals(directorName)){
-                return d;
-            }
-        }
-        return null;
+    //get movie by name
+    public Movie getMovie(String movie){
+       return movieDb.get(movie);
     }
+
+
+    //get director by name
+    public Director getDirector(String director){
+        return directorDb.get(director);
+    }
+
 
     //Get List of movies name for a given director name
-    Movie getMovieByDirectorNameFromDb(String directorName){
-        for(Movie m : movieDb.values()){
-            if(m.equals(directorName)){
-                return m;
-            }
-        }
-        return null;
+    public List<String> getMovieByDirectorNameFromDb(String directorName){
+        List<String> moviesList = new ArrayList<String>();
+        if(pairDb.containsKey(directorName)) moviesList = pairDb.get(directorName);
+        return moviesList;
     }
 
     //Get List of all movies added
-    Movie findAllMoviesFromDb(){
-        for(Movie m : movieDb.values()){
-            return m;
-        }
-        return null;
+    public List<String> findAllMoviesFromDb(){
+        return new ArrayList<>(movieDb.keySet());
     }
+
+
 
     //Delete a director and its movies from the records
-    Pair deleteDirectorByNameFromDb(String searchDirector){
-            return pairDb.remove(searchDirector);
+    public void deleteDirectorFromDb(String director){
+
+        List<String> movies = new ArrayList<String>();
+        if(pairDb.containsKey(director)){
+            //1. Find the movie names by director from the pair
+            movies = pairDb.get(director);
+
+            //2. Deleting all the movies from movieDb by using movieName
+            for(String movie: movies){
+                if(movieDb.containsKey(movie)){
+                    movieDb.remove(movie);
+                }
+            }
+
+            //3. Deleteing the pair
+            pairDb.remove(director);
+        }
+
+        //4. Delete the director from directorDb.
+        if(directorDb.containsKey(director)){
+            directorDb.remove(director);
+        }
     }
 
+
+
     //Delete all directors and all movies by them from the records
-    Director deleteAllDirectorFromDb(){
-        for(Director d : directorDb.values()){
-            directorDb.remove(d);
+    public void deleteAllDirectorFromDb(){
+
+        HashSet<String> moviesSet = new HashSet<String>();
+
+        //Deleting the director's map
+        directorDb = new HashMap<>();
+
+        //Finding out all the movies by all the directors combined
+        for(String director: pairDb.keySet()){
+
+            //Iterating in the list of movies by a director.
+            for(String movie: pairDb.get(director)){
+                moviesSet.add(movie);
+            }
         }
-        return null;
+
+        //Deleting the movie from the movieDb.
+        for(String movie: moviesSet){
+            if(movieDb.containsKey(movie)){
+                movieDb.remove(movie);
+            }
+        }
+        //clearing the pair.
+        pairDb = new HashMap<>();
     }
 }

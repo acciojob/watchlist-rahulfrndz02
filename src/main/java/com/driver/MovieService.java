@@ -1,5 +1,6 @@
 package com.driver;
 
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,41 +10,36 @@ public class MovieService {
     @Autowired
     MovieRepository movieRepository;
 
-    String addMovie(Movie movie){
-        String result = movieRepository.addMovieToDb(movie);
-        return result;
+    public void addMovie(Movie movie){
+       movieRepository.saveMovie(movie);
+
     }
 
-    String addDirector(Director director){
-        String result = movieRepository.addDirectorToDb(director);
-        return result;
+    public void addDirector(Director director){
+        movieRepository.saveDirector(director);
     }
 
-    Pair addMovieDirectorPair(Pair pair) {
-        Pair result = movieRepository.addMovieDirectorPairFromDb();
-        return result;
+    public void addMovieDirectorPair(String movie, String director) {
+        movieRepository.saveMovieDirectorPair(movie, director);
     }
-    Movie getMovieByMovieName(String searchM){
-        Movie result = movieRepository.getMovieByMovieNameFromDb(searchM);
-        return result;
+    public Movie getMovieByName(String searchM){
+        return movieRepository.getMovie(searchM);
     }
-    Director getDirectorByDirectorName(String d){
-        Director result = movieRepository.getDirectorByDirectorNameFromDb(d);
-        return result;
+    public Director getDirectorByName(String d){
+       return movieRepository.getDirector(d);
     }
-    Movie getMovieByDirectorName(String dName){
-        Movie result = movieRepository.getMovieByDirectorNameFromDb(dName);
-        return result;
+    public List<String> getMovieByDirectorName(String dName){
+        return movieRepository.getMovieByDirectorNameFromDb(dName);
     }
-    Movie findAllMovies(){
-        Movie result = movieRepository.findAllMoviesFromDb();
-        return result;
+    public List<String> findAllMovies(){
+        return movieRepository.findAllMoviesFromDb();
+
     }
-    Pair deleteDirectorByName(String searchDirector){
-        Pair pair = movieRepository.deleteDirectorByNameFromDb(searchDirector);
-        return pair;
+    public void deleteDirectorByName(String searchDirector){
+        movieRepository.deleteDirectorFromDb(searchDirector);
+
     }
-    Director deleteAllDirectors(){
-        return movieRepository.deleteAllDirectorFromDb();
+    public void deleteAllDirectors(){
+        movieRepository.deleteAllDirectorFromDb();
     }
 }
