@@ -64,7 +64,7 @@ public class MovieRepository {
 
 
     //Get List of movies name for a given director name
-    public List<String> getMovieByDirectorNameFromDb(String directorName){
+    public List<String> getMoviesByDirectorNameFromDb(String directorName){
         List<String> moviesList = new ArrayList<String>();
         if(pairDb.containsKey(directorName)) moviesList = pairDb.get(directorName);
         return moviesList;
