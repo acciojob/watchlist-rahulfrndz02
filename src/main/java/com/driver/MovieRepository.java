@@ -15,7 +15,6 @@ public class MovieRepository {
     Map<String, Director> directorDb = new HashMap<>(); //database for director
     Map<String, List<String>> pairDb = new HashMap<>(); //database for pair
 
-
     //add movie to db
     public void saveMovie(Movie movie){
         movieDb.put(movie.getName(),movie);
@@ -27,16 +26,11 @@ public class MovieRepository {
     }
 
     //save movie director pair
-    public void saveMovieDirectorPair(String movie, String Director){
+    public void saveMovieDirectorPair(String movie, String director){
 
-        if(directorDb.containsKey(Director) && movieDb.containsKey(movie)){
-            List<String> currentMovies=new ArrayList<>();
-            if(pairDb.containsKey(Director)){
-                currentMovies=pairDb.get(Director);
-                currentMovies.add(movie);
-                pairDb.put(Director,currentMovies);
-            }
-        }
+        List<String> movieList = pairDb.getOrDefault(director,new ArrayList<>());
+        movieList.add(movie);
+        pairDb.put(director,movieList);
     }
 
     //get movie by name
@@ -44,12 +38,10 @@ public class MovieRepository {
        return movieDb.get(movie);
     }
 
-
     //get director by name
     public Director getDirector(String director){
         return directorDb.get(director);
     }
-
 
     //Get List of movies name for a given director name
     public List<String> getMoviesByDirectorNameFromDb(String directorName){
@@ -63,59 +55,27 @@ public class MovieRepository {
         return new ArrayList<>(movieDb.keySet());
     }
 
-
-
     //Delete a director and its movies from the records
     public void deleteDirectorFromDb(String director){
-
-        List<String> movies = new ArrayList<String>();
-        if(pairDb.containsKey(director)){
-            //1. Find the movie names by director from the pair
-            movies = pairDb.get(director);
-
-            //2. Deleting all the movies from movieDb by using movieName
-            for(String movie: movies){
-                if(movieDb.containsKey(movie)){
-                    movieDb.remove(movie);
-                }
+        List<String> studentList = pairDb.get(director);
+        for(String student : studentList){
+            if(movieDb.containsKey(student)){
+                movieDb.remove(student);
             }
-
-            //3. Deleteing the pair
-            pairDb.remove(director);
         }
-
-        //4. Delete the director from directorDb.
-        if(directorDb.containsKey(director)){
-            directorDb.remove(director);
+        pairDb.remove(director);
         }
-    }
-
-
 
     //Delete all directors and all movies by them from the records
     public void deleteAllDirectorFromDb(){
-
-        HashSet<String> moviesSet = new HashSet<String>();
-
-        //Deleting the director's map
-        directorDb = new HashMap<>();
-
-        //Finding out all the movies by all the directors combined
-        for(String director: pairDb.keySet()){
-
-            //Iterating in the list of movies by a director.
-            for(String movie: pairDb.get(director)){
-                moviesSet.add(movie);
+        for(String teacher : pairDb.keySet()){
+            List<String> studentList = pairDb.get(teacher);
+            for(String student : studentList){
+                if(movieDb.containsKey(student)){
+                    movieDb.remove(student);
+                }
             }
         }
-
-        //Deleting the movie from the movieDb.
-        for(String movie: moviesSet){
-            if(movieDb.containsKey(movie)){
-                movieDb.remove(movie);
-            }
-        }
-        //clearing the pair.
-        pairDb = new HashMap<>();
+        pairDb.clear();
     }
 }
