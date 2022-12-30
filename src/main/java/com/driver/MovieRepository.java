@@ -8,25 +8,13 @@ import javax.management.modelmbean.ModelMBeanConstructorInfo;
 import java.security.DigestException;
 import java.util.*;
 
-//Pair class
-//class Pair{
-//    String movie;
-//    String director;
-//    public Pair(String movie, String director){
-//        this.movie = movie;
-//        this.director = director;
-//    }
-//}
-@Component
+
 @Repository
 public class MovieRepository {
-    private Map<String, Movie> movieDb = new HashMap<>(); //database for movie
-    private Map<String, Director> directorDb = new HashMap<>(); //database for director
-    private Map<String, List<String>> pairDb = new HashMap<>(); //database for pair
+    Map<String, Movie> movieDb = new HashMap<>(); //database for movie
+    Map<String, Director> directorDb = new HashMap<>(); //database for director
+    Map<String, List<String>> pairDb = new HashMap<>(); //database for pair
 
-//    static{
-//        movieDb.put(null, (new Movie("Mission Impossible", 124,9.9)));
-//    }
 
     //add movie to db
     public void saveMovie(Movie movie){

@@ -33,35 +33,38 @@ public class MovieController {
     @PutMapping("/add-movie-director-pair")
     public ResponseEntity<String> addMovieDirectorPair(@RequestParam String movie, @RequestParam String director){
         movieService.addMovieDirectorPair(movie, director);
-        return new ResponseEntity<>("New movie and new diretor pair added", HttpStatus.OK);
+        return new ResponseEntity<>("New movie and new director pair added", HttpStatus.OK);
     }
 
     //Get Movie by movie name
     @GetMapping("/get-movie-by-name/{name}")
     public ResponseEntity<Movie> getMovieByName(@PathVariable String searchMovie){
-         Movie movie = movieService.getMovieByName(searchMovie);
+        Movie movie = null;
+         movie = movieService.getMovieByName(searchMovie);
          return new ResponseEntity<>(movie, HttpStatus.FOUND);
     }
 
     //Get Director by director name
     @GetMapping("/get-director-by-director-name/{name}")
     public ResponseEntity<Director> getDirectorByName(@PathVariable String searchDirector){
-       // Director director = null;
-        Director director = movieService.getDirectorByName(searchDirector);
+       Director director = null;
+        director = movieService.getDirectorByName(searchDirector);
         return new ResponseEntity<>(director, HttpStatus.FOUND);
     }
 
     //Get List of movies name for a given director name
     @GetMapping("/get-movie-by-director-name/{name}")
     public ResponseEntity<List<String>> getMoviesByDirectorName(@PathVariable String searchDirector){
-        List<String> movie = movieService.getMoviesByDirectorName(searchDirector);
+        List<String> movie = null;
+        movie = movieService.getMoviesByDirectorName(searchDirector);
         return new ResponseEntity<>(movie, HttpStatus.FOUND);
     }
 
     //Get List of all movies added
     @GetMapping("/get-all-movies")
     public ResponseEntity<List<String>> findAllMovies(){
-        List<String> allMovie = movieService.findAllMovies();
+        List<String> allMovie = null;
+        allMovie = movieService.findAllMovies();
         return new ResponseEntity<>(allMovie, HttpStatus.FOUND);
     }
 
